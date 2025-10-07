@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    env_file:
+      - .env
+    environment:
+      - TG_BOT_TOKEN=${TG_BOT_TOKEN}
+      - INITDATA_TTL=${INITDATA_TTL:-300}
+      - PORT=8000
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      args:
+        # Если фронт и API на одном домене через Nginx, оставьте пустым
+        VITE_API_BASE: ""
+    ports:
+      - "8080:80"
+    volumes:
+      - ../gym-lockers/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend

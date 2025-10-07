@@ -1,0 +1,19 @@
+# Stage 1: build
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY gym-lockers/package*.json ./ 
+# Если есть lock-файл: COPY gym-lockers/package-lock.json ./
+RUN npm ci || npm i
+COPY gym-lockers/ .
+# Можно переопределять base API через аргумент/ENV
+ARG VITE_API_BASE=
+ENV VITE_API_BASE=$VITE_API_BASE
+RUN npm run build
+
+# Stage 2: nginx
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+COPY --from=build /app/dist ./
+# Nginx конфиг положим в /etc/nginx/conf.d/default.conf
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
