@@ -14,7 +14,7 @@ export const pushClient = async ({firstName, middleName, lastName, telegramId, g
     telegramId: string,
     gender: string
 }) => {
-    const base = import.meta.env.VITE_API_SERVER_URL || "81.177.6.93"
+    const base = import.meta.env.VITE_API_SERVER_URL || "https://81.177.6.93"
     console.log("HERE BASE: ", base)
 
     const url = `${base}/api/register`; 
