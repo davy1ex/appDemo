@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { createRoot } from "react-dom/client";
+
 import axios from "axios";
 import { SignUpPage } from "@/pages/sign-up/SignUpPage";
 // import { useAuthStore } from "@/stores/auth"; // опционально Zustand
@@ -96,3 +98,4 @@ export default function App() {
   );
 }
 
+createRoot(document.getElementById("root")!).render(<App/>)
