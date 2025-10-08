@@ -41,6 +41,7 @@ export default function App() {
   const isNewClient = fetchIsItNewClient()
   setLoadingProfile(false)
   console.log("MAIN app")
+  console.log("Is new client:", isNewClient)
 
 //   const handleGetId = () => {
 //     const tg = window.Telegram?.WebApp;
