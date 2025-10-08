@@ -52,7 +52,7 @@ export default function App() {
 //   };
 
 //   if (error) return <div>{error}</div>;
-//   if (!ready) return <div>Загрузка Mini App…</div>;
+  if (!ready) return <div>Загрузка Mini App…</div>;
   if (loadingProfile) return <div>Проверка профиля…</div>;
 
   return isNewClient ? (
