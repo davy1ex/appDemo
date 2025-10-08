@@ -4,6 +4,23 @@ import { createRoot } from "react-dom/client";
 
 export default function App() {
   const [userId, setUserId] = useState(null);
+    useEffect(() => {
+  const tg = window.Telegram?.WebApp;
+  console.log("TG present:", !!tg);
+  console.log("initData:", tg?.initData);             // строка tgWebAppData
+  console.log("initDataUnsafe:", tg?.initDataUnsafe); // объект с user, chat_instance, hash
+
+  if (!tg) {
+    console.warn("Открыто вне Telegram Mini App");
+    return;
+  }
+  tg.ready();
+  tg.expand();
+
+  if (!tg.initDataUnsafe?.user?.id) {
+    tg.showAlert("Нет user.id — запусти из бота через WebApp кнопку.");
+  }
+}, []);
 
   useEffect(() => {
     console.log("111")
