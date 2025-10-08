@@ -36,7 +36,7 @@ function useTelegramInit() {
 }
 
 export default function App() {
-  const { ready, error, userId, initDataRaw } = useTelegramInit();
+//   const { ready, error, userId, initDataRaw } = useTelegramInit();
   const [loadingProfile, setLoadingProfile] = useState(true);
   const isNewClient = fetchIsItNewClient()
   setLoadingProfile(false)
@@ -51,14 +51,26 @@ export default function App() {
 //     tg.showAlert(id ? `Ваш Telegram ID: ${id}` : "ID недоступен. Откройте из бота по WebApp‑кнопке.");
 //   };
 
-  if (error) return <div>{error}</div>;
-  if (!ready) return <div>Загрузка Mini App…</div>;
+//   if (error) return <div>{error}</div>;
+//   if (!ready) return <div>Загрузка Mini App…</div>;
   if (loadingProfile) return <div>Проверка профиля…</div>;
 
   return isNewClient ? (
     <SignUpPage
       onSubmit={async (form) => {
-        pushClient()
+        const tg = window.Telegram?.WebApp;
+        const idNum = tg?.initDataUnsafe?.user?.id ?? null;
+        const telegramId = idNum != null ? String(idNum) : "";
+
+        await pushClient({
+            firstName: form.form.firstName,
+            middleName: form.form.middleName ?? "",     // если поле опционально — подставить ""
+            lastName: form.form.lastName,
+            telegramId,                                  // строка из initDataUnsafe
+            gender: form.form.gender as "M" | "W",       // убедиться в валидном значении
+        });
+
+
       }}
     />
   ) : (
@@ -70,3 +82,4 @@ export default function App() {
 }
 
 createRoot(document.getElementById("root")!).render(<App/>)
+// 81.177.6.93/api/register
