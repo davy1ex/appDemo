@@ -58,6 +58,8 @@ export default function App() {
           setIsNewClient(true);
         }
       } finally {
+        alert(isNewClient)
+        console.log(isNewClient)
         if (!aborted) setLoadingProfile(false);
       }
     })();
@@ -84,7 +86,7 @@ export default function App() {
   return isNewClient ? (
     <SignUpPage
       onSubmit={async (form) => {
-        await axios.post("/api/register", form, {
+        await axios.post(`/api/register`, form, {
           headers: { Authorization: `tma ${initDataRaw}` },
         });
         setIsNewClient(false);
