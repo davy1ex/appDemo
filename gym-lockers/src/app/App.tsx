@@ -36,7 +36,7 @@ function useTelegramInit() {
 }
 
 export default function App() {
-//   const { ready, error, userId, initDataRaw } = useTelegramInit();
+  const { ready, error, userId, initDataRaw } = useTelegramInit();
   const [loadingProfile, setLoadingProfile] = useState(true);
   const isNewClient = fetchIsItNewClient()
   setLoadingProfile(false)
@@ -69,8 +69,6 @@ export default function App() {
             telegramId,                                  // строка из initDataUnsafe
             gender: form.form.gender as "M" | "W",       // убедиться в валидном значении
         });
-
-
       }}
     />
   ) : (
@@ -82,4 +80,4 @@ export default function App() {
 }
 
 createRoot(document.getElementById("root")!).render(<App/>)
-// 81.177.6.93/api/register
+
