@@ -9,6 +9,7 @@ export const QRScanPage = () => {
     const onScan = (result) => {
         setIsScanned(true)
         console.log(result[0].rawValue)
+        alert("U scamed " +  result[0].rawValue)
         fetchOnScan()
     }
 
