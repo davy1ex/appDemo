@@ -39,6 +39,7 @@ export default function App() {
   const { ready, error, userId, initDataRaw } = useTelegramInit();
   const [loadingProfile, setLoadingProfile] = useState(true);
   const isNewClient = fetchIsItNewClient()
+  setLoadingProfile(false)
 
 //   const handleGetId = () => {
 //     const tg = window.Telegram?.WebApp;
