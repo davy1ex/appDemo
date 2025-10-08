@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import axios from "axios";
 import { SignUpPage } from "@/pages/sign-up/SignUpPage";
-import { fetchIsItNewClient } from "@/features/signUp/singUpNewClient";
+import { fetchIsItNewClient, pushClient } from "@/features/signUp/singUpNewClient";
 // import { useAuthStore } from "@/stores/auth"; // опционально Zustand
 
 type CheckResp = { isNewClient: boolean; userId: number };
@@ -57,10 +57,7 @@ export default function App() {
   return isNewClient ? (
     <SignUpPage
       onSubmit={async (form) => {
-        await axios.post(`/api/register`, form, {
-          headers: { Authorization: `tma ${initDataRaw}` },
-        });
-        setIsNewClient(false);
+        pushClient()
       }}
     />
   ) : (

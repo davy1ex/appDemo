@@ -4,3 +4,7 @@ export const fetchIsItNewClient = () => {
     // return !isLogined
     return false
 }
+
+export const pushClient = () => {
+    localStorage.setItem("isLogined", "true")
+}
