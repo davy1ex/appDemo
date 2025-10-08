@@ -1,0 +1,1 @@
+export { QRScanPage } from './QRScanPage';
