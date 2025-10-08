@@ -1,1 +1,1 @@
-export { QRScanPage } from './QRScanPage';
+export { QRScanPage } from "./QRScanPage"

@@ -1,1 +1,0 @@
-export { LockerToolbar } from './LockerToolbar';
