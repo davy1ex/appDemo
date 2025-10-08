@@ -13,6 +13,7 @@ type Props = {
 };
 
 export const SignUpPage = ({ onSubmit }: Props) => {
+    console.log("signup page")
   const tg = useMemo(() => window.Telegram?.WebApp, []);
   const [userId, setUserId] = useState<string>("");
   const [form, setForm] = useState<SignUpForm>({
