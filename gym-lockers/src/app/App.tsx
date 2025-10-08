@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+
 
 export default function App() {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    console.log("111")
     const tg = window.Telegram?.WebApp;
     if (!tg) return;
     tg.ready();
@@ -54,6 +57,7 @@ export default function App() {
   );
 }
 
+createRoot(document.getElementById("root")!).render(<App/>);
 
 // import { createRoot } from "react-dom/client";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
