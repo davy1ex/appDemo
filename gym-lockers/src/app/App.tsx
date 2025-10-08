@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import axios from "axios";
 import { SignUpPage } from "@/pages/sign-up/SignUpPage";
 import { fetchIsItNewClient, pushClient } from "@/features/signUp/singUpNewClient";
+import { redirect } from "react-router-dom";
+import { QRScanPage } from "@/pages/qr-scan";
 
 type CheckResp = { isNewClient: boolean; userId: number };
 
@@ -97,13 +99,14 @@ export default function App() {
   }
 
   return (
-    <div>
-      <h1>Тут будут храниться шкафчики</h1>
-      <img
-        src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNmV6bzJtMTJkemZlNnhydHI5aHludXQzYTlnMGlidTRhbm1mY3NkNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Fu4xiFsAEwkDZrkp8H/200w.gif"
-        alt=""
-      />
-    </div>
+    // <div>
+    //   <h1>Тут будут храниться шкафчики</h1>
+    //   <img
+    //     src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNmV6bzJtMTJkemZlNnhydHI5aHludXQzYTlnMGlidTRhbm1mY3NkNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Fu4xiFsAEwkDZrkp8H/200w.gif"
+    //     alt=""
+    //   />
+    // </div>
+    <QRScanPage/>
   );
 }
 
