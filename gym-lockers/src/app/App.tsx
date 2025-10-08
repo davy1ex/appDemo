@@ -17,8 +17,8 @@ export default function App() {
     const tg = window.Telegram?.WebApp;
     const id = tg?.initDataUnsafe?.user?.id || null;
     setUserId(id);
-    if (id) tg.showAlert(`Ваш Telegram ID: ${id}`);
-    else tg.showAlert("ID недоступен. Откройте в Telegram Mini App.");
+    if (id) alert(`Ваш Telegram ID: ${id}`);
+    else alert("ID недоступен. Откройте в Telegram Mini App.");
   };
 
   return (
