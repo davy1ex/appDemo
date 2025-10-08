@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-
 import axios from "axios";
 import { SignUpPage } from "@/pages/sign-up/SignUpPage";
 import { fetchIsItNewClient, pushClient } from "@/features/signUp/singUpNewClient";
-// import { useAuthStore } from "@/stores/auth"; // опционально Zustand
 
 type CheckResp = { isNewClient: boolean; userId: number };
 
@@ -38,48 +36,75 @@ function useTelegramInit() {
 export default function App() {
   const { ready, error, userId, initDataRaw } = useTelegramInit();
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const isNewClient = fetchIsItNewClient()
-  setLoadingProfile(false)
-  console.log("MAIN app")
-  console.log("Is new client:", isNewClient)
+  const [isNewClient, setIsNewClient] = useState<boolean | null>(null);
 
-//   const handleGetId = () => {
-//     const tg = window.Telegram?.WebApp;
-//     if (!tg) {
-//       alert("Открыто вне Telegram — запустите как Mini App.");
-//       return;
-//     }
-//     const id = userId ?? "";
-//     tg.showAlert(id ? `Ваш Telegram ID: ${id}` : "ID недоступен. Откройте из бота по WebApp‑кнопке.");
-//   };
+  // Проверяем статус клиента после инициализации WebApp
+  useEffect(() => {
+    if (!ready) return;
+    let aborted = false;
 
-//   if (error) return <div>{error}</div>;
+    (async () => {
+      // Временно используем локальный кэш; лучше спросить сервер по initDataRaw
+      const localFlag = fetchIsItNewClient();
+      if (!aborted) {
+        setIsNewClient(localFlag);
+        setLoadingProfile(false);
+      }
+      // Пример серверной проверки (раскомментировать при готовом API):
+      // try {
+      //   const { data } = await axios.get<CheckResp>("/api/me", {
+      //     headers: { Authorization: `tma ${initDataRaw}` },
+      //   });
+      //   if (!aborted) setIsNewClient(!!data.isNewClient);
+      // } catch {
+      //   if (!aborted) setIsNewClient(true);
+      // } finally {
+      //   if (!aborted) setLoadingProfile(false);
+      // }
+    })();
+
+    return () => {
+      aborted = true;
+    };
+  }, [ready /*, initDataRaw*/]);
+
+  if (error) return <div>{error}</div>;
   if (!ready) return <div>Загрузка Mini App…</div>;
-  if (loadingProfile) return <div>Проверка профиля…</div>;
+  if (loadingProfile || isNewClient === null) return <div>Проверка профиля…</div>;
 
-  return isNewClient ? (
-    <SignUpPage
-      onSubmit={async (form) => {
-        const tg = window.Telegram?.WebApp;
-        const idNum = tg?.initDataUnsafe?.user?.id ?? null;
-        const telegramId = idNum != null ? String(idNum) : "";
-
-        await pushClient({
+  if (isNewClient) {
+    return (
+      <SignUpPage
+        onSubmit={async (form) => {
+          const tg = window.Telegram?.WebApp;
+          const idNum = tg?.initDataUnsafe?.user?.id ?? null;
+          const telegramId = idNum != null ? String(idNum) : "";
+          await pushClient({
             firstName: form.form.firstName,
-            middleName: form.form.middleName ?? "",     // если поле опционально — подставить ""
+            middleName: form.form.middleName ?? "",
             lastName: form.form.lastName,
-            telegramId,                                  // строка из initDataUnsafe
-            gender: form.form.gender as "M" | "W",       // убедиться в валидном значении
-        });
-      }}
-    />
-  ) : (
+            telegramId,
+            gender: form.form.gender as "M" | "W",
+          });
+          // Опционально: после успешной регистрации обновить локальный флаг
+          // и показать основной экран
+          setIsNewClient(false);
+          localStorage.setItem("isLogined", "true");
+          tg?.showAlert("Регистрация завершена");
+        }}
+      />
+    );
+  }
+
+  return (
     <div>
-        <h1>Тут будут храниться шкафчики</h1>
-        <img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNmV6bzJtMTJkemZlNnhydHI5aHludXQzYTlnMGlidTRhbm1mY3NkNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Fu4xiFsAEwkDZrkp8H/200w.gif" alt="" srcset="" />
+      <h1>Тут будут храниться шкафчики</h1>
+      <img
+        src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNmV6bzJtMTJkemZlNnhydHI5aHludXQzYTlnMGlidTRhbm1mY3NkNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Fu4xiFsAEwkDZrkp8H/200w.gif"
+        alt=""
+      />
     </div>
   );
 }
 
-createRoot(document.getElementById("root")!).render(<App/>)
-
+createRoot(document.getElementById("root")!).render(<App />);
