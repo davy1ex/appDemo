@@ -40,6 +40,7 @@ export default function App() {
   const [loadingProfile, setLoadingProfile] = useState(true);
   const isNewClient = fetchIsItNewClient()
   setLoadingProfile(false)
+  console.log("MAIN app")
 
 //   const handleGetId = () => {
 //     const tg = window.Telegram?.WebApp;
