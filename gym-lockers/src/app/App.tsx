@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import axios from "axios";
 import { SignUpPage } from "@/pages/sign-up/SignUpPage";
+import { fetchIsItNewClient } from "@/features/signUp/singUpNewClient";
 // import { useAuthStore } from "@/stores/auth"; // опционально Zustand
 
 type CheckResp = { isNewClient: boolean; userId: number };
@@ -37,47 +38,17 @@ function useTelegramInit() {
 export default function App() {
   const { ready, error, userId, initDataRaw } = useTelegramInit();
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [isNewClient, setIsNewClient] = useState<boolean | null>(null);
+  const isNewClient = fetchIsItNewClient()
 
-  // Получение статуса с бэкенда после инициализации
-  useEffect(() => {
-    if (!ready || !initDataRaw) return;
-    let aborted = false;
-
-    (async () => {
-      try {
-        const { data } = await axios.get<CheckResp>("/api/me", {
-          headers: { Authorization: `tma ${initDataRaw}` },
-        });
-        if (!aborted) {
-          setIsNewClient(!!data.isNewClient);
-        }
-      } catch {
-        if (!aborted) {
-          // Если не авторизован на бэке — трактуем как новый клиент
-          setIsNewClient(true);
-        }
-      } finally {
-        alert(isNewClient)
-        console.log(isNewClient)
-        if (!aborted) setLoadingProfile(false);
-      }
-    })();
-
-    return () => {
-      aborted = true;
-    };
-  }, [ready, initDataRaw]);
-
-  const handleGetId = () => {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) {
-      alert("Открыто вне Telegram — запустите как Mini App.");
-      return;
-    }
-    const id = userId ?? "";
-    tg.showAlert(id ? `Ваш Telegram ID: ${id}` : "ID недоступен. Откройте из бота по WebApp‑кнопке.");
-  };
+//   const handleGetId = () => {
+//     const tg = window.Telegram?.WebApp;
+//     if (!tg) {
+//       alert("Открыто вне Telegram — запустите как Mini App.");
+//       return;
+//     }
+//     const id = userId ?? "";
+//     tg.showAlert(id ? `Ваш Telegram ID: ${id}` : "ID недоступен. Откройте из бота по WebApp‑кнопке.");
+//   };
 
   if (error) return <div>{error}</div>;
   if (!ready) return <div>Загрузка Mini App…</div>;
