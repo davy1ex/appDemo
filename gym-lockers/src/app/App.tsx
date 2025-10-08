@@ -15,10 +15,14 @@ export default function App() {
 
   const handleGetId = () => {
     const tg = window.Telegram?.WebApp;
-    const id = tg?.initDataUnsafe?.user?.id || null;
-    setUserId(id);
-    if (id) alert(`Ваш Telegram ID: ${id}`);
-    else alert("ID недоступен. Откройте в Telegram Mini App.");
+  const id = tg?.initDataUnsafe?.user?.id ?? null;
+
+  setUserId(id);
+  if (tg) {
+    tg.showAlert(id ? `Ваш Telegram ID: ${id}` : "ID недоступен. Откройте из бота по WebApp-кнопке.");
+  } else {
+    alert("Открыто вне Telegram — запустите как Mini App.");
+  }
   };
 
   return (
